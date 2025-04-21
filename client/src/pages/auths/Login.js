@@ -1,13 +1,13 @@
 import React, { useContext, useState } from "react";
 import { assets } from "../../assets/assets.js";
-import { useNavigate } from "react-router-dom";
+import { data, useNavigate } from "react-router-dom";
 import { AppContent } from "../../context/AppContext.js";
 import axios from "axios";
 import { toast } from "react-toastify";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { backendUrl, setIsLogin } = useContext(AppContent);
+  const { backendUrl, setIsLogin, getUserData } = useContext(AppContent);
   const [state, setState] = useState("Sign Up");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -16,33 +16,35 @@ const Login = () => {
   const onSubmitHandler = async (e) => {
     try {
       e.preventDefault();
+      axios.defaults.withCredentials = true;
       if (state === "Sign Up") {
-        const { data } = await axios.post(`${backendUrl}/auth/signup`, {
+        const { data } = await axios.post(backendUrl + "api/auth/register", {
           email,
           password,
           name,
         });
         if (data.success) {
           setIsLogin(true);
+          getUserData();
           navigate("/");
         } else {
           toast.error(data.message);
         }
       } else {
-        const { data } = await axios.post(`${backendUrl}/auth/login`, {
+        const { data } = await axios.post(backendUrl + "api/auth/login", {
           email,
           password,
         });
         if (data.success) {
           setIsLogin(true);
+          getUserData();
           navigate("/");
         } else {
           toast.error(data.message);
         }
       }
     } catch (error) {
-      console.log(error);
-      toast.error("Something went wrong");
+      toast.error(data.message);
     }
   };
 
