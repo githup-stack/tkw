@@ -72,7 +72,7 @@ const Navbar = () => {
 
               {/* Shopping cart with badge and improved accessibility */}
               <Link
-                to="/GioHang"
+                to="/Cart"
                 className="flex items-center group transition duration-300 relative"
                 aria-label="Shopping Cart"
               >
